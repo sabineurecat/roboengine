@@ -1,5 +1,5 @@
 
-<h1> 🦄 RoboEngine: Plug-and-Play Robot Data Augmentation with Semantic Robot Segmentation and Background Generation </h1>
+<h1> RoboEngine: Plug-and-Play Robot Data Augmentation with Semantic Robot Segmentation and Background Generation </h1>
 
 **[Chengbo Yuan*](https://michaelyuancb.github.io/), [Suraj Joshi*](https://x.com/nonlinearjunkie), [Shaoting Zhu*](https://zst1406217.github.io/), [Hang Su](https://scholar.google.com/citations?user=dxN1_X0AAAAJ&hl=en), [Hang Zhao](https://hangzhaomit.github.io/), [Yang Gao](https://yang-gao.weebly.com/).**
 
