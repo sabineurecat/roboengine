@@ -20,7 +20,7 @@ pip install -e .
 pip install en_core_web_sm-3.8.0-py3-none-any.whl
 ```
 
-The model checkpoints is managed via huggingface. It will be automatically downloaded in the first time you run RoboEngine. You can also download the checkpoints and datasets manually. 
+The model checkpoints are managed via huggingface. They will be automatically downloaded for the first time you run RoboEngine. You can also download the checkpoints and datasets manually. 
 
 |  Segmentation Dataset   | Segmentation Model  | Inpainting Model |
 |  ----  |  ----  |  ----  |
