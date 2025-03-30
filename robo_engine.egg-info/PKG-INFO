@@ -1,0 +1,144 @@
+Metadata-Version: 2.1
+Name: robo_engine
+Version: 0.1
+Summary: robo_engine: a plug-and-play visual robot data augmentation toolkit
+Home-page: https://github.com/michaelyuancb/robo_engine
+Author: michael_yuan
+Author-email: ycb24@mails.tsinghua.edu.cn
+Classifier: Programming Language :: Python :: 3
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Operating System :: OS Independent
+Requires-Python: >=3.9
+License-File: LICENSE
+Requires-Dist: torch
+Requires-Dist: torchvision
+Requires-Dist: packaging
+Requires-Dist: sentencepiece
+Requires-Dist: einops
+Requires-Dist: numpy
+Requires-Dist: opencv_python
+Requires-Dist: Pillow
+Requires-Dist: pycocotools==2.0.6
+Requires-Dist: Requests
+Requires-Dist: tqdm
+Requires-Dist: uvicorn
+Requires-Dist: scipy
+Requires-Dist: bitsandbytes
+Requires-Dist: timm
+Requires-Dist: blobfile
+Requires-Dist: mypy
+Requires-Dist: pytest
+Requires-Dist: requests
+Requires-Dist: tensorboardX
+Requires-Dist: opencv-python
+Requires-Dist: torchmetrics
+Requires-Dist: deepspeed
+Requires-Dist: pycocoevalcap
+Requires-Dist: torchscale
+Requires-Dist: hydra-core
+Requires-Dist: accelerate
+Requires-Dist: transformers
+Requires-Dist: pyarrow
+Requires-Dist: ftfy
+Requires-Dist: tensorboard
+Requires-Dist: datasets
+Requires-Dist: diffusers
+Requires-Dist: huggingface_hub
+Requires-Dist: scikit-image
+Requires-Dist: python-box
+Requires-Dist: spacy
+Requires-Dist: imageio
+Requires-Dist: imageio[pyav]
+Requires-Dist: imageio[ffmpeg]
+
+<div align ="center">
+<h1> 🦄 RoboEngine </h1>
+<h3> Unleash the Scaling Power of Visual Robot Data Augmentation with Plug-and-Play Tools </h3>
+
+Chengbo Yuan, Shaoting Zhu, Suraj Joshi, Shengjie Wang, Hang Zhao, Yang Gao
+
+</div>
+
+# Installation
+
+
+python = 3.10
+
+sam2@git+https://github.com/facebookresearch/sam2.git@main # if use inpainting
+
+需要完善：Model Card
+https://huggingface.co/michaelyuanqwq/robo-sam
+
+
+
+## Quick Start
+
+Here is a script copied from ``infer_engine.py``.
+
+```
+from utils.utils import vis_sam2_anything, refine_mask
+
+config_dir = "./cfg"
+image_path = "/root/project/robo_engine/robot_example.png"
+instruction = "pickup the cap from the kettle."
+image_np = np.array(Image.open(image_path))
+
+########################### Robot Segmentation ################################
+robo_seg = RoboEngineRobotSegmentation(config_dir, seg_method=["robo_sam"])
+mask_robot = robo_seg.gen_image(image_np)
+mask_robot = refine_mask(mask_robot)
+Image.fromarray((mask_robot*255).astype(np.uint8)).save('mask_robot.png')
+
+########################### Object Segmentation ###############################
+obj_seg = RoboEngineObjectSegmentation(config_dir, seg_method=["evf_sam"])
+mask_obj = obj_seg.gen_image(image_np, instruction=instruction, verbose=True)
+mask_obj = refine_mask(mask_obj)
+Image.fromarray((mask_obj*255).astype(np.uint8)).save('mask_obj.png')
+
+########################### Saliency Segmentation #############################
+mask = ((mask_robot + mask_obj) > 0).astype(np.float32)
+mask = refine_mask(mask)
+Image.fromarray((mask*255).astype(np.uint8)).save('mask.png')
+np.save("mask.npy", mask)
+
+
+########################### Visual Augmentation ###############################
+
+mask = np.load("mask.npy")
+aug_method = "engine"   # selection: engine, background, inpainting, imagenet, texture, black      
+robo_engine = RoboEngineAugmentation(config_dir, aug_method=aug_method)
+aug_image = robo_engine.gen_image(image_np, mask, num_inference_steps=20, cond_scale=0.1, verbose=True)
+Image.fromarray(aug_image).save(f'aug_image_{aug_method}.png')
+
+```
+
+## Tool Tutorial
+
+We have three modules: (1) robot segmentation, (2) object segmentation and (3) visual augmentatoin. For each module, we provide several modes for usage.
+
+#### Robot Segmentation
+``` 
+robo_seg = RoboEngineRobotSegmentation(config_dir, seg_method=["robo_sam"]) 
+```
+ - **["robo_sam"]**: use the finetuned EVF-SAM from RoboSeg dataset.
+
+#### Object Segmentation
+```
+obj_seg = RoboEngineObjectSegmentation(config_dir, seg_method=["evf_sam"])
+```
+ - **["evf_sam"]**: use the multitask-version EVF-SAM.
+ - **["grounding_sam"] (TODO)**: use the GroundingSAM.
+ - **["gripper_sam"] (TODO)**: input the gripper position, use it as the prompt of SAM2.
+
+#### Visual Augmentation
+```
+robo_engine = RoboEngineAugmentation(config_dir, aug_method="engine")
+```
+ - **"engine"**: Our finetuned PBG-Diffusion for physics-realistic background generation.
+ - **"background"**: Using StableDiffusion2.1 to generate a random semantic background.
+ - **"inpainting"**: First use SAM2 to get several task-irrelevant area, then use StableInpainting + ControlNet-Normal to inpaint.
+ - **"imagenet" (TODO)**: Copy a random image from ImageNet and then crop-resize to the shape as the background.
+ - **"texture" (TODO)**: Use a random texture as the background.
+ - **"black" (TODO)**: Use black background.
+
+To reproduce previous methods: RoboAgent & CACTI with "inpainting". GreenAug with "background", "texture" and "black". RoVi-Aug with "imagenet". Some bug and sub-optimal design of the original prototype (e.g. mis-choice of the inpainting model) are fixed for performance improvement. 

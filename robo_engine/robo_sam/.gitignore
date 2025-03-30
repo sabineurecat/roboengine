@@ -1,0 +1,12 @@
+**/__pycache__
+.vscode/
+/vis
+/infer
+/*.sh
+/runs
+/video_exp
+EVF-finetuning-ckpts/
+example/
+example.tar.gz
+*.png
+*.json
