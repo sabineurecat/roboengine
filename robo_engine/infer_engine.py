@@ -295,6 +295,9 @@ class RoboEngineAugmentation:
                 image_batch = [Image.fromarray(image_np) for image_np in image_np_batch]
                 aug_images = infer_image_batch(image_batch, mask_np_batch, prompt_list, self.bg_sd_pipeline, cond_scale=cond_scale, num_images_per_prompt=1, num_inference_steps=num_inference_steps, seed=seed)
                 aug_image_list = aug_image_list + [np.array(aug_image).astype(np.uint8) for aug_image in aug_images]
+            elif self.aug_method == "texture" or self.aug_method == 'imagenet' or self.aug_method == 'black':
+                image_np_batch = [image_np for image_np in image_np_batch]
+                aug_image_list = aug_image_list + [self.gen_image(image_np, mask_np) for image_np, mask_np in zip(image_np_batch, mask_np_batch)]
             elif self.aug_method == "inpainting":
                 if cond_scale is None:  
                     cond_scale = 0.1
