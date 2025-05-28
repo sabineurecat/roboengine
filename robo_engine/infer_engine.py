@@ -117,6 +117,10 @@ class RoboEngineObjectSegmentation:
         masks = np.zeros((1, 1, 1))
         if instruction is not None:
             obj_instruction = extract_noun_phrases_with_adjectives(instruction, self.nlp)
+            if verbose is True:
+                print("#"*60)
+                print("Instruction: ", instruction)
+                print("Object Instruction: ", obj_instruction)
         if preset_masks is not None:
             masks = masks + preset_masks
         if instruction is None:
@@ -127,10 +131,6 @@ class RoboEngineObjectSegmentation:
             vmask_obj = sam_video_infer(self.image_size, image_np_list, self.obj_video_tokenizer, self.obj_video_sam, "[semantic] " + obj_name, anchor_frequency=anchor_frequency)
             masks = masks + vmask_obj
         masks = (masks > 0).astype(np.float32)
-        if verbose is True:
-            print("#"*60)
-            print("Instruction: ", instruction)
-            print("Object Instruction: ", obj_instruction)
         return masks
 
 
