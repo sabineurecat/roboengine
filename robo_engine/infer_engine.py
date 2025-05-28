@@ -70,7 +70,7 @@ class RoboEngineRobotSegmentation:
         mask = (mask > 0).astype(np.float32)[0]
         return mask
 
-    def gen_video(self, image_np_list, prompt="robot", anchor_frequency=8, preset_masks=None):
+    def gen_video(self, image_np_list, prompt="robot", anchor_frequency=1, preset_masks=None):
         masks = np.zeros((1, 1, 1))
         if preset_masks is not None:
             masks = masks + preset_masks
@@ -113,7 +113,7 @@ class RoboEngineObjectSegmentation:
         mask = (mask > 0).astype(np.float32)[0]
         return mask
 
-    def gen_video(self, image_np_list, instruction=None, anchor_frequency=8, preset_masks=None, verbose=False):
+    def gen_video(self, image_np_list, instruction=None, anchor_frequency=1, preset_masks=None, verbose=False):
         masks = np.zeros((1, 1, 1))
         if instruction is not None:
             obj_instruction = extract_noun_phrases_with_adjectives(instruction, self.nlp)
