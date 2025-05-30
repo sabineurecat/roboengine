@@ -42,6 +42,7 @@ RUN git clone https://github.com/facebookresearch/sam2.git /workspace/sam2 && \
 # Install required Python dependencies from the requirements.txt file
 COPY requirements.txt /workspace/requirements.txt
 RUN pip3 install --no-cache-dir -r /workspace/requirements.txt && \
+    pip3 install --no-cache-dir transformers==4.28.1 && \
     rm -rf /root/.cache/pip
 
 # Install specific version of spaCy model from .whl file
