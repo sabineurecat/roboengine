@@ -73,6 +73,7 @@ class EvfSam2Model(PreTrainedModel):
         self.bce_loss_weight = kwargs.get("bce_loss_weight", None)
         self.train_mask_decoder = kwargs.get("train_mask_decoder", False)
         self.train_prompt_encoder = kwargs.get("train_prompt_encoder", False)
+        config.sam_scale = "tiny"
         self.initialize_evf_modules(config)
         self._bb_feat_sizes = [
             (256, 256),
