@@ -79,5 +79,5 @@ if __name__ == "__main__":
     video_org_fp = 'video_original.mp4'
     prompt_video = "fold the towel."
     
-    image_example(image_org_fp, prompt_image, engine_robo_seg, engine_obj_seg, engine_bg_aug)
-    # video_example(video_org_fp, prompt_video, engine_robo_seg, engine_obj_seg, engine_bg_aug)
+    # image_example(image_org_fp, prompt_image, engine_robo_seg, engine_obj_seg, engine_bg_aug)
+    video_example(video_org_fp, prompt_video, engine_robo_seg, engine_obj_seg, engine_bg_aug)
