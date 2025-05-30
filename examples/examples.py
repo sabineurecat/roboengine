@@ -76,7 +76,7 @@ if __name__ == "__main__":
 
     image_org_fp = 'image_original.png'
     prompt_image = "fold the towel."
-    video_org_fp = '/workspace/roboengine/examples/video_original.mp4'
+    video_org_fp = '/workspace/examples/video_original.mp4'
     prompt_video = "fold the towel."
     
     # image_example(image_org_fp, prompt_image, engine_robo_seg, engine_obj_seg, engine_bg_aug)
