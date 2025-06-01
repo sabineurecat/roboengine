@@ -57,4 +57,4 @@ WORKDIR /workspace
 ENV PYTHONPATH=/workspace/robo_engine:$PYTHONPATH
 
 # Set default command to run when starting the container
-CMD ["bash"]
+CMD ["python3", "examples/examples.py"]
