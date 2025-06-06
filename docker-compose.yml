@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  roboengine:
+    build: .
+    image: roboengine:latest
+    container_name: roboengine
+    # Uncomment if you want to map a local folder for persistent data or code changes:
+    # volumes:
+    #   - .:/workspace
+    # Uncomment to expose ports (if needed, e.g. for SSH or web apps):
+    # ports:
+    #   - "2222:22"
+    # Set environment variables if needed:
+    environment:
+      - PYTHONPATH=/workspace/robo_engine:$PYTHONPATH
+    # Keep the container running for manual interaction:
+    command: sleep infinity
+    # Use NVIDIA runtime for GPU access:
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
